@@ -43,7 +43,7 @@ jobs:
         run: |
           snow sql -q "
           EXECUTE DCM PROJECT DEV_SF_DB.PUBLIC.ECOMMERCE_DCM_DEV
-          DEPLOY AS 'ci_cd_deployment'
+          DEPLOY
           USING CONFIGURATION dev
           FROM @INTEGRATIONS.GITHUB.ECOM_DCM_REPO/branches/main/;
           " -x
