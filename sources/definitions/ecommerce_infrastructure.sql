@@ -1,3 +1,4 @@
+-- new change to trigger pipeline
 DEFINE SCHEMA {{ sf_db }}.RAW;
 DEFINE SCHEMA {{ sf_db }}.TRANSFORM;
 DEFINE SCHEMA {{ sf_db }}.REPORTING;
