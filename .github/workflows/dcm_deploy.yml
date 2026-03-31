@@ -11,28 +11,39 @@ jobs:
 
     env:
       SNOWFLAKE_AUTHENTICATOR: SNOWFLAKE_JWT
-      SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
-      SNOWFLAKE_USER: ${{ secrets.SF_USER }}
-      SNOWFLAKE_PRIVATE_KEY_RAW: ${{ secrets.SF_PRIVATE_KEY }}
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SNOWFLAKE_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SNOWFLAKE_USER }}
+      SNOWFLAKE_PRIVATE_KEY_RAW: ${{ secrets.SNOWFLAKE_PRIVATE_KEY }}
       SNOWFLAKE_ROLE: ECOM_DCM_ADMIN
       SNOWFLAKE_WAREHOUSE: COMPUTE_WH
+      SNOWFLAKE_DATABASE: DEV_SF_DB        # ✅ FIX
+      SNOWFLAKE_SCHEMA: PUBLIC             # ✅ FIX
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Install Snowflake CLI
-        run: pip install snowflake-cli
+        uses: snowflakedb/snowflake-cli-action@v2.0
 
-      - name: Fetch Git Repo in Snowflake
+      - name: Fetch Git Repo
         run: |
-          snow sql -q "ALTER GIT REPOSITORY DEV_SF_DB.PUBLIC.ECOM_DCM_REPO FETCH;" -x
+          snow sql -q "
+          ALTER GIT REPOSITORY INTEGRATIONS.GITHUB.ECOM_DCM_REPO FETCH;
+          " -x
 
-      - name: Deploy DCM Project
+      - name: Plan DEV
         run: |
           snow sql -q "
           EXECUTE DCM PROJECT DEV_SF_DB.PUBLIC.ECOMMERCE_DCM_DEV
-          DEPLOY AS 'ci cd deployment'
+          PLAN USING CONFIGURATION dev
+          FROM @INTEGRATIONS.GITHUB.ECOM_DCM_REPO/branches/main/;
+          " -x
+
+      - name: Deploy DEV
+        run: |
+          snow sql -q "
+          EXECUTE DCM PROJECT DEV_SF_DB.PUBLIC.ECOMMERCE_DCM_DEV
+          DEPLOY AS 'CI/CD deployment'
           USING CONFIGURATION dev
-          FROM @DEV_SF_DB.PUBLIC.ECOM_DCM_REPO/branches/main/;
+          FROM @INTEGRATIONS.GITHUB.ECOM_DCM_REPO/branches/main/;
           " -x
