@@ -9,31 +9,24 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
+    env:
+      SNOWFLAKE_AUTHENTICATOR: SNOWFLAKE_JWT
+      SNOWFLAKE_ACCOUNT: ${{ secrets.SF_ACCOUNT }}
+      SNOWFLAKE_USER: ${{ secrets.SF_USER }}
+      SNOWFLAKE_PRIVATE_KEY_RAW: ${{ secrets.SF_PRIVATE_KEY }}
+      SNOWFLAKE_ROLE: ECOM_DCM_ADMIN
+      SNOWFLAKE_WAREHOUSE: COMPUTE_WH
+
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
       - name: Install Snowflake CLI
-        run: |
-          pip install snowflake-cli
+        uses: snowflakedb/snowflake-cli-action@v2
 
-      # ✅ CREATE KEY FIRST
-      - name: Create Private Key File
+      - name: Fetch Git Repo
         run: |
-          echo "${{ secrets.SF_PRIVATE_KEY }}" > key.p8
-
-      # ✅ THEN USE KEY
-      - name: Configure Snowflake Connection
-        run: |
-          snow connection add \
-          --connection-name ci_conn \
-          --account ${{ secrets.SF_ACCOUNT }} \
-          --user ${{ secrets.SF_USER }} \
-          --private-key-path key.p8 \
-          --role ECOM_DCM_ADMIN \
-          --warehouse COMPUTE_WH \
-          --database DEV_SF_DB \
-          --schema PUBLIC
+          snow sql -q "ALTER GIT REPOSITORY ECOM_DCM_REPO FETCH;" -x
 
       - name: Deploy DCM Project
         run: |
@@ -42,4 +35,4 @@ jobs:
           DEPLOY AS 'ci cd deployment'
           USING CONFIGURATION dev
           FROM @ECOM_DCM_REPO/branches/main/;
-          "
+          " -x
