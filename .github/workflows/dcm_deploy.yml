@@ -22,9 +22,9 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Snowflake CLI
-        uses: snowflakedb/snowflake-cli-action@v1
+        run: pip install snowflake-cli
 
-      - name: Fetch Git Repo
+      - name: Fetch Git Repo in Snowflake
         run: |
           snow sql -q "ALTER GIT REPOSITORY ECOM_DCM_REPO FETCH;" -x
 
