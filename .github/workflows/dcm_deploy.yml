@@ -22,7 +22,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install Snowflake CLI
-        uses: snowflakedb/snowflake-cli-action@v2
+        uses: snowflakedb/snowflake-cli-action@v1
 
       - name: Fetch Git Repo
         run: |
