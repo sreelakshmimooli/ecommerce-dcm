@@ -25,14 +25,15 @@ jobs:
       # ✅ THEN USE KEY
       - name: Configure Snowflake Connection
         run: |
-          snow connection add ci_conn \
-            --account ${{ secrets.SF_ACCOUNT }} \
-            --user ${{ secrets.SF_USER }} \
-            --private-key-path key.p8 \
-            --role ECOM_DCM_ADMIN \
-            --warehouse COMPUTE_WH \
-            --database DEV_SF_DB \
-            --schema PUBLIC
+          snow connection add \
+          --connection-name ci_conn \
+          --account ${{ secrets.SF_ACCOUNT }} \
+          --user ${{ secrets.SF_USER }} \
+          --private-key-path key.p8 \
+          --role ECOM_DCM_ADMIN \
+          --warehouse COMPUTE_WH \
+          --database DEV_SF_DB \
+          --schema PUBLIC
 
       - name: Deploy DCM Project
         run: |
