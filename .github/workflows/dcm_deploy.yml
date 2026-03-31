@@ -26,7 +26,7 @@ jobs:
 
       - name: Fetch Git Repo in Snowflake
         run: |
-          snow sql -q "ALTER GIT REPOSITORY ECOM_DCM_REPO FETCH;" -x
+          snow sql -q "ALTER GIT REPOSITORY DEV_SF_DB.PUBLIC.ECOM_DCM_REPO FETCH;" -x
 
       - name: Deploy DCM Project
         run: |
@@ -34,5 +34,5 @@ jobs:
           EXECUTE DCM PROJECT DEV_SF_DB.PUBLIC.ECOMMERCE_DCM_DEV
           DEPLOY AS 'ci cd deployment'
           USING CONFIGURATION dev
-          FROM @ECOM_DCM_REPO/branches/main/;
+          FROM @DEV_SF_DB.PUBLIC.ECOM_DCM_REPO/branches/main/;
           " -x
