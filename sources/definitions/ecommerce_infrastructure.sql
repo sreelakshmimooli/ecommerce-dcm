@@ -52,3 +52,7 @@ DEFINE TABLE {{ sf_db }}.RAW.ORDERS_NEW (
   ID NUMBER,
   AMOUNT NUMBER
 );
+
+DEFINE TABLE {{ sf_db }}.RAW.TEST_TABLE (
+  ID INT
+);
