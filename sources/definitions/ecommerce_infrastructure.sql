@@ -58,7 +58,7 @@ DEFINE TABLE {{ sf_db }}.RAW.TEST_TABLE (
 );
 
 -- New change to trigger pipeline (meaningful addition)
-DEFINE TABLE {{ sf_db }}.RAW.PAYMENTS1 (
+DEFINE TABLE {{ sf_db }}.RAW.PAYMENTS2 (
     PAYMENT_ID VARCHAR,
     ORDER_ID VARCHAR,
     PAYMENT_METHOD VARCHAR,
