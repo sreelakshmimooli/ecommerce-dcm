@@ -56,3 +56,13 @@ DEFINE TABLE {{ sf_db }}.RAW.ORDERS_NEW (
 DEFINE TABLE {{ sf_db }}.RAW.TEST_TABLE (
   ID INT
 );
+
+-- New change to trigger pipeline (meaningful addition)
+DEFINE TABLE {{ sf_db }}.RAW.PAYMENTS (
+    PAYMENT_ID VARCHAR,
+    ORDER_ID VARCHAR,
+    PAYMENT_METHOD VARCHAR,
+    PAYMENT_STATUS VARCHAR,
+    PAYMENT_DATE TIMESTAMP,
+    AMOUNT NUMBER(10,2)
+);
